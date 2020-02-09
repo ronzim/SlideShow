@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>D/Vision LAb SlideShow</title>
+
+    <!-- JS files -->
+    <script src="lib/three.min.js"></script>
+    <script src="lib/TrackballControls.js"></script>
+
+    <!-- STL loader-->
+    <script src="lib/stl-loader.js"></script>
+  </head>
+  <body>
+    <!-- <video width="0" height="0">
+      <source
+        src="https://www.youtube.com/watch?v=J3ue35ago3Y"
+        type="video/mp4"
+      />
+    </video> -->
+    <div id="app-container"></div>
+  </body>
+  <script>
+    var path = require("path");
+    var pjson = require("./package.json");
+    var rootPath = pjson.dev ? process.cwd() : process.resourcesPath + "/app/";
+    let scene = require("./scene.js");
+    scene.render();
+  </script>
+</html>
