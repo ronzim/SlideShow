@@ -1,4 +1,4 @@
-bvar path = require("path");
+var path = require("path");
 var fs = require("fs-extra");
 var TrackballControls = require(path.join(
   rootPath,
@@ -8,12 +8,12 @@ var TrackballControls = require(path.join(
 
 const dev = false;
 
-var camera, scene, renderer;
+var camera, scene, renderer, video, controls;
 var cameraOriginalPosition = new THREE.Vector3(0, 20, 90);
 
 var initScene = function() {
-  var video = document.createElement("video");
   //make your video canvas
+  video = document.createElement("video");
   var videocanvas = document.createElement("canvas");
   var videocanvasctx = videocanvas.getContext("2d");
 
@@ -39,7 +39,7 @@ var initScene = function() {
   camera.position.copy(cameraOriginalPosition);
   camera.lookAt(0, 0, 0);
 
-  var control = new THREE.TrackballControls(camera, renderer.domElement);
+  controls = new THREE.TrackballControls(camera, renderer.domElement);
 
   var light = new THREE.AmbientLight(0x555555, 1);
   scene.add(light);
@@ -53,21 +53,25 @@ var initScene = function() {
     scene.add(gridPlane);
     scene.add(gridPlaneAxis);
   }
+};
 
+function populateScene() {
   //================================//
   //====== SCENE CONTENT ===========//
   //================================//
 
-  var baseName = "Slide-";
-  var numberOfSlides = 23;
-  var slides = new Array(numberOfSlides)
-    .fill(0)
-    .map((a, n) => baseName + (n + 1));
+  var slides = fs.readdirSync("./slides/").filter(f => f.includes(".jpg"));
+  var numberOfSlides = slides.length;
+  console.log(slides);
+  var baseName = slides[0].split("-")[0];
+  // var numberOfSlides = 23;
+  // var slides = new Array(numberOfSlides)
+  //   .fill(0)
+  //   .map((a, n) => baseName + (n + 1));
   var videos = new Array(numberOfSlides);
   videos[22] = "./Video.mp4";
   var planeDim = new THREE.Vector3(16, 9, 0);
   var videoPlaying;
-  console.log(slides);
 
   // create a circle and sample to obtain plane positions
   var geometry = new THREE.CircleGeometry(50, numberOfSlides);
@@ -107,14 +111,14 @@ var initScene = function() {
   function addSlide(name, i) {
     console.log("addSlide", name, i);
 
-    if (!fs.existsSync("./slides/" + name + ".jpg")) {
+    if (!fs.existsSync("./slides/" + name)) {
       console.warn("slide not found", name);
       return;
     }
 
     var img = new THREE.MeshBasicMaterial({
       side: THREE.DoubleSide,
-      map: THREE.ImageUtils.loadTexture("./slides/" + name + ".jpg"),
+      map: THREE.ImageUtils.loadTexture("./slides/" + name),
       // wireframe: true,
       transparent: true,
       opacity: 0.5
@@ -362,13 +366,10 @@ var initScene = function() {
   }
 
   function moveCamera() {
-    var old_pos = camera.position;
-    var old_target = control.target;
-
     if (cameraTargetPosition) {
       camera.up = new THREE.Vector3(0, 1, 0);
       camera.position.lerp(cameraTargetPosition, 0.1);
-      control.target.lerp(controlsTargetPosition, 0.1);
+      controls.target.lerp(controlsTargetPosition, 0.1);
     }
   }
 
@@ -402,7 +403,7 @@ var initScene = function() {
     }
 
     requestAnimationFrame(animate);
-    control.update(0.5);
+    controls.update(0.5);
     renderer.render(scene, camera);
   }
 
@@ -413,7 +414,7 @@ var initScene = function() {
   }
 
   render();
-};
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -425,4 +426,7 @@ function onWindowResize() {
 
 window.addEventListener("resize", onWindowResize, false);
 
-exports.render = initScene;
+exports.render = function() {
+  initScene();
+  populateScene();
+};
