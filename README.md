@@ -5,7 +5,7 @@ A three js carrousel of slides
 ## How to setup
 
 Just run "npm install".
-Then place your slides into the ./slides/ folder, in a format that can be loaded into a texture (jsg, png, ...).
+Then place your slides into the ./slides/ folder, in a format that can be loaded into a texture (jpg, png, ...).
 Name the slides as rootName-1, rootName-2, etc..
 
 A texturized plane will be created for each slides.
