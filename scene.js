@@ -12,7 +12,7 @@ var camera, scene, renderer, video, controls;
 var stars = [];
 var cameraOriginalPosition = new THREE.Vector3(0, 20, 90);
 
-var initScene = function() {
+var initScene = function () {
   //make your video canvas
   video = document.createElement("video");
   var videocanvas = document.createElement("canvas");
@@ -61,7 +61,9 @@ function populateScene() {
   //====== SCENE CONTENT ===========//
   //================================//
 
-  var slides = fs.readdirSync("./slides/").filter(f => f.includes(".jpg"));
+  var slides = fs.readdirSync("./slides/").filter(f => {
+    return f.includes(".jpg") || f.includes(".JPG") || f.includes(".png");
+  });
   var numberOfSlides = slides.length;
   console.log(slides);
   var baseName = slides[0].split("-")[0];
@@ -91,7 +93,7 @@ function populateScene() {
   if (dev) {
     scene.add(circle);
 
-    circle.geometry.vertices.forEach(function(v, i) {
+    circle.geometry.vertices.forEach(function (v, i) {
       var color = i == 1 ? "red" : "green";
       var ball = new THREE.Mesh(
         new THREE.SphereGeometry(1, 8, 8),
@@ -147,7 +149,7 @@ function populateScene() {
   var title;
   var loader = new THREE.FontLoader();
 
-  loader.load("./resources/optimer_regular.typeface.json", function(font) {
+  loader.load("./resources/optimer_regular.typeface.json", function (font) {
     var geometry = new THREE.TextGeometry("3D Visualization", {
       font: font,
       size: 5,
@@ -239,7 +241,7 @@ function populateScene() {
   function onmousemove(event) {
     selected = null;
 
-    scene.children.forEach(function(child) {
+    scene.children.forEach(function (child) {
       if (child.name.includes(baseName)) {
         child.material.transparent = true;
         child.material.opacity = 0.5;
@@ -320,7 +322,7 @@ function populateScene() {
       fixedViewOff();
       selected = next_selected;
       fixedViewOn();
-      setTimeout(function() {
+      setTimeout(function () {
         cameraTargetPosition = new THREE.Vector3(
           selected.position.x,
           selected.position.y,
@@ -334,7 +336,7 @@ function populateScene() {
   function fixedViewOn() {
     fixedView = true;
     document.onmousemove = null;
-    scene.children.forEach(function(child) {
+    scene.children.forEach(function (child) {
       if (child.name.includes(baseName) && child.name !== selected.name) {
         // child.material.color = new THREE.Color('white');
         child.visible = false;
@@ -347,7 +349,7 @@ function populateScene() {
   function fixedViewOff() {
     fixedView = false;
     document.onmousemove = onmousemove;
-    scene.children.forEach(function(child) {
+    scene.children.forEach(function (child) {
       if (child.name.includes(baseName)) {
         // child.material.color = new THREE.Color('white');
         child.visible = true;
@@ -359,7 +361,7 @@ function populateScene() {
     cameraTargetPosition = new THREE.Vector3().copy(cameraOriginalPosition);
     controlsTargetPosition = new THREE.Vector3(0, 0, 0);
 
-    setTimeout(function() {
+    setTimeout(function () {
       console.log("cameraTargetPosition", null);
       cameraTargetPosition = null;
       controlsTargetPosition = null;
@@ -467,7 +469,7 @@ function onWindowResize() {
 
 window.addEventListener("resize", onWindowResize, false);
 
-exports.render = function() {
+exports.render = function () {
   initScene();
   addSphere();
   populateScene();
