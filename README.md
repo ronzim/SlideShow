@@ -17,3 +17,7 @@ Run `npm start` and move around with following controls:
 - Left click on a slide to go fullscreen
 - Arrow keys to move to the next / previous slide
 - Right click to go back to slide overview
+
+## Example:
+
+![image](https://user-images.githubusercontent.com/45311591/144465449-85e8d558-5d89-44c3-a0ac-8b2e2b8aa023.png)
