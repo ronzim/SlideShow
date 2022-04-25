@@ -1,6 +1,6 @@
 # SlideShow
 
-A three js carrousel of slides
+A three js carrousel of slides that runs into an electron app.
 
 ## How to setup
 
